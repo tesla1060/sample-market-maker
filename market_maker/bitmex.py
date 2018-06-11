@@ -253,7 +253,11 @@ class BitMEX(object):
             self.logger.info("sending req to %s: %s" % (url, json.dumps(postdict or query or '')))
             req = requests.Request(verb, url, json=postdict, auth=auth, params=query)
             prepped = self.session.prepare_request(req)
-            response = self.session.send(prepped, timeout=timeout)
+            proxies = {
+                'http': '127.0.0.1:1080',
+                'https': '127.0.0.1:1080'
+            }
+            response = self.session.send(prepped, timeout=timeout, proxies=proxies)
             # Make non-200s throw
             response.raise_for_status()
 
